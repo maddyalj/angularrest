@@ -1,0 +1,19 @@
+{
+  "name": "angularrest",
+  "version": "1.0.0",
+  "description": "Angular service to easily create restful API services.",
+  "main": "src/angularrest.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maddyalj/angularrest.git"
+  },
+  "author": "Maddy Alj",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maddyalj/angularrest/issues"
+  },
+  "homepage": "https://github.com/maddyalj/angularrest#readme"
+}
