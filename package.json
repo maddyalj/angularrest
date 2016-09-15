@@ -1,7 +1,7 @@
 {
   "name": "angularrest",
   "version": "1.0.0",
-  "description": "Angular service to easily create restful API services.",
+  "description": "Angular factory to easily create restful API services.",
   "main": "src/angularrest.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

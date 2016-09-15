@@ -1,2 +1,2 @@
 # angularrest
-Angular service to easily create restful API services.
+Angular factory to easily create restful API services.

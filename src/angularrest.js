@@ -3,46 +3,43 @@
 
     angular.module('angularrest', []);
 
-    angular.module('angularrest').service('AngularRest', function ($http) {
-        function Model(object) {
-            angular.extend(this, object);
-        }
-        Model.prototype.update = function (object) {
-            return $http.patch(api + '/' + this.id, object).then(successCallback);
-        }
-        Model.prototype.delete = function () {
-            return $http.delete(api + '/' + this.id).then(successCallback);
-        }
+    angular.module('angularrest').factory('AngularRest', function ($http) {
+        return function (dst, route) {
+            var api = '/api/' + route;
 
-        function successCallback(response) {
-            if (angular.isArray(response.data) === true) {
-                var models = [];
-                for (var i = 0; i < response.data.length; i++) {
-                    models.push(new Model(response.data[i]));
-                }
-                return models;
+            dst.all = function (params) {
+                return $http.get(api, {params: params}).then(successCallback);
+            };
+            dst.paginate = function (params) {
+                return $http.get(api, {params: params}).then(successCallback);
+            };
+            dst.find = function (id) {
+                return $http.get(api + '/' + id).then(successCallback);
+            };
+            dst.create = function (object) {
+                return $http.post(api, object).then(successCallback);
             }
-            return new Model(response.data);
-        }
 
-        var service = this;
-        var api = '/api/';
+            function Model(object) {
+                angular.extend(this, object);
+            }
+            Model.prototype.update = function () {
+                return $http.patch(api + '/' + this.id, this).then(successCallback);
+            }
+            Model.prototype.delete = function () {
+                return $http.delete(api + '/' + this.id).then(successCallback);
+            }
 
-        service.make = function (dst, route) {
-            api += route;
-            angular.extend(dst, service);
-        }
-        service.all = function (params) {
-            return $http.get(api, {params: params}).then(successCallback);
+            function successCallback(response) {
+                if (angular.isArray(response.data) === true) {
+                    var models = [];
+                    for (var i = 0; i < response.data.length; i++) {
+                        models.push(new Model(response.data[i]));
+                    }
+                    return models;
+                }
+                return new Model(response.data);
+            }
         };
-        service.paginate = function (params) {
-            return $http.get(api, {params: params}).then(successCallback);
-        };
-        service.find = function (id) {
-            return $http.get(api + '/' + id).then(successCallback);
-        };
-        service.create = function (object) {
-            return $http.post(api, object).then(successCallback);
-        }
     });
 })();
