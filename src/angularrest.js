@@ -4,7 +4,11 @@
     angular.module('angularrest', []);
 
     angular.module('angularrest').factory('AngularRest', function ($http) {
-        return function (dst, route) {
+        var factoryFunction = function (dst, route, relations) {
+            if (typeof relations === 'undefined') {
+                relations = [];
+            }
+
             var api = '/api/' + route;
 
             dst.all = function (params) {
@@ -18,7 +22,7 @@
             };
             dst.create = function (object) {
                 return $http.post(api, object).then(successCallback);
-            }
+            };
 
             function Model(object) {
                 angular.extend(this, object);
@@ -28,6 +32,14 @@
             }
             Model.prototype.delete = function () {
                 return $http.delete(api + '/' + this.id).then(successCallback);
+            }
+            for (var i = 0; i < relations.length; i++) {
+                var relation = relations[i];
+                Model.prototype[relation] = function () {
+                    var relationFunction = function () {};
+                    factoryFunction(relationFunction, route + '/' + this.id + '/' + relation);
+                    return relationFunction;
+                };
             }
 
             function successCallback(response) {
@@ -41,5 +53,6 @@
                 return new Model(response.data);
             }
         };
+        return factoryFunction;
     });
-})();
+}) ();
